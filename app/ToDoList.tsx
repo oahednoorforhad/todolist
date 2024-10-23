@@ -12,9 +12,24 @@ export default function ToDoList(){
         setNewTask(event.target.value)
     }
     function AddTask() {
-        if (newTask.trim()!="") {
-            setTasks([...tasks, newTask])
+        if (newTask.trim() != "") {
+            const UpdatedTasks = ([...tasks, newTask]);
+            setTasks(UpdatedTasks)
+            const sendObj = { tasks: UpdatedTasks };
             setNewTask("")
+            fetch('http://localhost:5000/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                
+                body: JSON.stringify(sendObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                })
+             .catch(error => console.error('Error:', error));
         }
     }
     function DeleteTask(index: number) {
