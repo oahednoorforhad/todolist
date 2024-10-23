@@ -56,15 +56,14 @@ export default function ToDoList(){
         <div className="p-10 justify-items-center">
             <div className='pb-20'>
                 <AnimatedGradientText>
-        <span
-          className={cn(
-            `text-8xl inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent `,
-          )}
-        >
-          To-Do-List
-        </span>
-      </AnimatedGradientText>
-                
+                <span
+                    className={cn(
+                                    `text-8xl inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent `,
+                    )}
+                >
+                    To-Do-List
+                </span>
+                    </AnimatedGradientText>
             </div>
             <div className='flex justify-between gap-2 items-center'>
                 <input
@@ -105,7 +104,6 @@ export default function ToDoList(){
                 )}
             </ol>
             </div>
-            
         </div>
     )
   }
