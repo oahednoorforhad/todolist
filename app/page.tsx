@@ -9,17 +9,20 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Function to handle authentication completion
-  const handleAuthSuccess = () => {
+  const handleAuth = () => {
     setIsAuthenticated(true); // Set authenticated to true after auth success
   };
-
+  const handleLogout = () => {
+    console.log("handle sign out triggered")
+    setIsAuthenticated(false); // Set authenticated to false after logout
+  };
   return (
     <div className="h-screen w-full font-mono bg-foreground text-background flex items-center justify-center justify-items-center relative">
       {/* Conditionally render AuthForm or ToDoList */}
       {!isAuthenticated ? (
-        <AuthForm onAuthSuccess={handleAuthSuccess} /> // Pass the success handler to AuthForm
+        <AuthForm onAuthSuccess={handleAuth} /> // Pass the success handler to AuthForm
       ) : (
-        <ToDoList />
+        <ToDoList onLogout={handleLogout} />
       )}
 
       <Particles className="absolute inset-0" quantity={100} ease={100} refresh />

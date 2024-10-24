@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 // Add a prop for the auth success callback
 export default function AuthForm({ onAuthSuccess }: { onAuthSuccess: () => void }) {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+let flag = true;
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const auth = { username: "oahed", pass: "oahed"}
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitted(true);
@@ -19,16 +21,22 @@ export default function AuthForm({ onAuthSuccess }: { onAuthSuccess: () => void 
     // Simulating authentication logic
     if (isSignUp) {
       console.log("Sign Up Data - Username:", username, "Email:", email, "Password:", password);
-    } else {
-      console.log("Sign In Data - Username:", username, "Password:", password);
+      onAuthSuccess();
+    } else if(username==auth.username && password==auth.pass) {
+      // console.log("Sign In Data - Username:", username, "Password:", password);
+      onAuthSuccess();
+    }
+    else {
+      flag = true;
     }
 
     // Assuming authentication is successful, trigger the parent callback
-    onAuthSuccess();
+    // onAuthSuccess();
   };
+  
 
   return (
-    <div className="flex flex-col items-center justify-center h-96 w-60 rounded-xl bg-secondary">
+    <div className="flex flex-col items-center justify-center p-10 rounded-xl bg-secondary text-black">
       <div className="mb-6">
               <Button
           variant="outline"
@@ -88,9 +96,9 @@ export default function AuthForm({ onAuthSuccess }: { onAuthSuccess: () => void 
           {isSignUp ? "Sign Up" : "Sign In"}
         </Button>
 
-        {isSubmitted && (
+        {!flag && (
           <p className="mt-4 text-center text-green-500">
-            {isSignUp ? "Sign Up" : "Sign In"} Form Submitted. Check console for details.
+            Username or Password does not match...
           </p>
         )}
       </form>

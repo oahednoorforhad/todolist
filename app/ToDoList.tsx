@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { SearchParamsContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime'
 import React, { useState } from 'react'
-export default function ToDoList(){
+export default function ToDoList({ onLogout }: { onLogout: () => void }){
     const [tasks, setTasks] = useState(["Get Up", "Freshen Up", "Take Shower", "Go To Uni"])
     const [newTask, setNewTask]=useState("")
     function handleInputChange(event: { target: { value: React.SetStateAction<string> } }) {
@@ -52,6 +52,10 @@ export default function ToDoList(){
             setTasks(updatedTasks)
         }
     }
+    const handleSignOut = () => {
+        console.log("sign out triggered")
+    onLogout();
+  }
     return (
         <div className="p-10 justify-items-center">
             <div className='pb-20'>
@@ -103,6 +107,12 @@ export default function ToDoList(){
                     </li>
                 )}
             </ol>
+            </div>
+            <div>
+                <Button
+                onClick={handleSignOut}>
+                    Sign out
+                </Button>
             </div>
         </div>
     )
