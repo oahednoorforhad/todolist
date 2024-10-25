@@ -7,9 +7,15 @@ import AuthForm from "./AuthForm";
 export default function Home() {
   // State to track if user is authenticated
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState({
+    username: "",
+    password: "",
+    tasks: [] as string[], // Array of strings (tasks)
+  });
 
   // Function to handle authentication completion
-  const handleAuth = () => {
+  const handleAuth = (userData: { username: string; password: string; tasks: string[] }) => {
+    setUserData(userData);
     setIsAuthenticated(true); // Set authenticated to true after auth success
   };
   const handleLogout = () => {
@@ -22,7 +28,9 @@ export default function Home() {
       {!isAuthenticated ? (
         <AuthForm onAuthSuccess={handleAuth} /> // Pass the success handler to AuthForm
       ) : (
-        <ToDoList onLogout={handleLogout} />
+          <ToDoList
+            onLogout={handleLogout}
+            userData={userData} />
       )}
 
       <Particles className="absolute inset-0" quantity={100} ease={100} refresh />

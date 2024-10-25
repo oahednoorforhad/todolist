@@ -5,19 +5,26 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { SearchParamsContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime'
 import React, { useState } from 'react'
-export default function ToDoList({ onLogout }: { onLogout: () => void }){
-    const [tasks, setTasks] = useState(["Get Up", "Freshen Up", "Take Shower", "Go To Uni"])
+interface ToDoListProps {
+    userData: { username: string; password: string; tasks: string[] };
+    
+  onLogout: () => void;
+}
+export default function ToDoList({ userData,onLogout }: ToDoListProps) {
+    
+    const [tasks, setTasks] = useState(userData.tasks)
     const [newTask, setNewTask]=useState("")
     function handleInputChange(event: { target: { value: React.SetStateAction<string> } }) {
         setNewTask(event.target.value)
     }
+    
     function AddTask() {
         if (newTask.trim() != "") {
             const UpdatedTasks = ([...tasks, newTask]);
             setTasks(UpdatedTasks)
             const sendObj = { tasks: UpdatedTasks };
             setNewTask("")
-            fetch('http://localhost:5000/tasks', {
+            fetch('http://localhost:5000/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,6 +38,7 @@ export default function ToDoList({ onLogout }: { onLogout: () => void }){
                 })
              .catch(error => console.error('Error:', error));
         }
+        
     }
     function DeleteTask(index: number) {
         const updatedTasks = tasks.filter((_, i) => i !== index);
@@ -69,6 +77,7 @@ export default function ToDoList({ onLogout }: { onLogout: () => void }){
                 </span>
                     </AnimatedGradientText>
             </div>
+            <div><h3>{userData.username}</h3></div>
             <div className='flex justify-between gap-2 items-center'>
                 <input
                     className='text-black w-[310px] h-16 rounded-xl border-black'

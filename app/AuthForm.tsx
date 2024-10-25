@@ -3,33 +3,79 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+// Props type definition
+interface AuthFormProps {
+  onAuthSuccess: (data: { username: string; password: string; tasks: string[] }) => void;
+}
 // Add a prop for the auth success callback
-export default function AuthForm({ onAuthSuccess }: { onAuthSuccess: () => void }) {
+export default function AuthForm( { onAuthSuccess }: AuthFormProps) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-let flag = true;
+  const [tasks, setTasks] = useState([]); // Example task array
+  const [userData,setUserData] = useState([]);
+  let flag = true;
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const auth = { username: "oahed", pass: "oahed"}
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitted(true);
+    fetch(`http://localhost:5000/user?username=${encodeURIComponent(username)}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          },
+        })
+      .then(res => res.json())
+      .then(data => {
+        setUserData(data)
+        console.log(userData);
 
-    // Simulating authentication logic
-    if (isSignUp) {
-      console.log("Sign Up Data - Username:", username, "Email:", email, "Password:", password);
-      onAuthSuccess();
-    } else if(username==auth.username && password==auth.pass) {
-      // console.log("Sign In Data - Username:", username, "Password:", password);
-      onAuthSuccess();
-    }
-    else {
-      flag = true;
-    }
-
+        // Simulating authentication logic
+        if (isSignUp && !userData.userData) {
+          const sendObj = {
+            username: username,
+            email: email,
+            password: password,
+            tasks: []
+          }
+          console.log(sendObj);
+      
+          fetch('http://localhost:5000/user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+                
+            body: JSON.stringify(sendObj)
+          })
+            .then(res => res.json())
+            .then(data1 => {
+              console.log(data1);
+            })
+            .catch(error => console.error('Error:', error));
+          onAuthSuccess({
+            username,
+            password,
+            tasks: [], // Array of tasks
+          });
+        } else if (isSignUp && userData.userData ) {
+          // console.log("Sign In Data - Username:", username, "Password:", password);
+          flag = true;
+        }
+        else if(!isSignUp && userData && (userData.password==password)) {
+          onAuthSuccess({
+            username,
+            password,
+            tasks: [], // Array of tasks
+          })
+        }
+        else {
+          flag = true;
+        }
+      })
+  .catch(error => console.error('Error:', error));
     // Assuming authentication is successful, trigger the parent callback
     // onAuthSuccess();
   };
@@ -98,7 +144,7 @@ let flag = true;
 
         {!flag && (
           <p className="mt-4 text-center text-green-500">
-            Username or Password does not match...
+            {isSignUp ? "Username already exists" : "Username or Password does not match..."}
           </p>
         )}
       </form>
